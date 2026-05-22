@@ -51,7 +51,7 @@
     <h1>Highwayman</h1>
     <p>The Highwaymen · Spotify</p>
     <button id="play" autofocus>Play album</button>
-    <div class="hint" id="hint">Add this page to your home screen. It will not open Spotify until you press the button.</div>
+    <div class="hint" id="hint">Add this page to your home screen. From the home-screen icon it will open Spotify automatically.</div>
   </main>
 
   <script>
@@ -68,7 +68,20 @@
       setTimeout(() => { window.location.href = albumUrl; }, 1500);
     }
 
+    function shouldAutoplay() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('autoplay') === '1' ||
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true;
+    }
+
     document.getElementById('play').addEventListener('click', playHighwayman);
+
+    // Do not auto-open in normal Chrome, so setup remains possible.
+    // Auto-open only after launch from the home-screen app/shortcut.
+    if (shouldAutoplay()) {
+      setTimeout(playHighwayman, 450);
+    }
   </script>
 </body>
 </html>
