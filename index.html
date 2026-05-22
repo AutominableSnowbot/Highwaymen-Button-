@@ -59,13 +59,21 @@
       navigator.serviceWorker.register('./sw.js').catch(() => {});
     }
 
-    const albumUrl = 'https://open.spotify.com/album/6rFM5jHaGzwut3hGbG9pGU';
-    const intentUrl = 'intent://open.spotify.com/album/6rFM5jHaGzwut3hGbG9pGU#Intent;scheme=https;package=com.spotify.music;S.browser_fallback_url=' + encodeURIComponent(albumUrl) + ';end';
+    const albumId = '6rFM5jHaGzwut3hGbG9pGU';
+    const albumUrl = 'https://open.spotify.com/album/' + albumId;
+    const spotifyUri = 'spotify:album:' + albumId;
+    const intentUrl = 'intent://album/' + albumId + '#Intent;scheme=spotify;package=com.spotify.music;S.browser_fallback_url=' + encodeURIComponent(albumUrl) + ';end';
+    const webIntentUrl = 'intent://open.spotify.com/album/' + albumId + '#Intent;scheme=https;package=com.spotify.music;S.browser_fallback_url=' + encodeURIComponent(albumUrl) + ';end';
 
     function playHighwayman() {
       document.getElementById('hint').textContent = 'Opening Spotify…';
-      window.location.href = intentUrl;
-      setTimeout(() => { window.location.href = albumUrl; }, 1500);
+
+      // Try the native Spotify URI first. Some Samsung Browser builds handle this
+      // better than https intent links. Fall back to Android intents, then web.
+      window.location.href = spotifyUri;
+      setTimeout(() => { window.location.href = intentUrl; }, 350);
+      setTimeout(() => { window.location.href = webIntentUrl; }, 900);
+      setTimeout(() => { window.location.href = albumUrl; }, 1800);
     }
 
     function shouldAutoplay() {

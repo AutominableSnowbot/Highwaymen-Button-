@@ -1,4 +1,4 @@
-const CACHE = 'highwayman-button-v2';
+const CACHE = 'highwayman-button-v3';
 const ASSETS = [
   './',
   './index.html',
